@@ -4,6 +4,7 @@
 #include "pch.h"
 #include <iostream>
 #include "winsock2.h"
+#include <string>
 
 int main()
 {
@@ -69,6 +70,7 @@ int main()
 			char tmp2[] = "";
 			sscanf(buf + 5, "%s %s", tmp, tmp2);
 			sprintf(link, "C:\\%s\\*.*" ,tmp);
+			
 			printf("ejtheuth %s", link);
 
 			char header[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body>";
