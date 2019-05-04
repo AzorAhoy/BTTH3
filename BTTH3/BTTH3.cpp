@@ -47,25 +47,63 @@ int main()
 					// In ra tên thư mục
 					char link[] = "";
 					//sprintf(link, "C:\\%s\\", DATA.cFileName);
-					sprintf(msg + strlen(msg), "<br><i><a href = \"C:\\netcat - 1.11\">%s</a></i><br>", DATA.cFileName);
+					sprintf(msg + strlen(msg), "<br><i><a href = \"%s\">%s</a></i><br>", DATA.cFileName, DATA.cFileName);
 					//system("PAUSE");
 				}
 				else {
 					char tmp[] = "";
 					//int offset =  0;
 					unsigned long size = (DATA.nFileSizeHigh*(MAXDWORD + 1)) + DATA.nFileSizeLow;
-					sprintf(msg + strlen(msg), "<br><i><a href = \"D:\\netcat - 1.11\\Out.txt\"\">%s : %ul</a></i><br>", DATA.cFileName, size);
+					sprintf(msg + strlen(msg), "<br><i><a href = \"%s\">%s : %ul</a></i><br>", DATA.cFileName, DATA.cFileName, size);
 				}
 			} while (FindNextFileA(h, &DATA));
 			sprintf(msg + strlen(msg), "</body></html>");
 			printf(msg);
 			send(client, msg, strlen(msg), 0);
 		}
+		else if(strncmp(buf, "GET /", 5) == 0)
+		{
+			WIN32_FIND_DATAA DATA2;
+			char link[] = "";
+			char tmp[] = "";
+			char tmp2[] = "";
+			sscanf(buf + 5, "%s %s", tmp, tmp2);
+			sprintf(link, "C:\\%s\\*.*" ,tmp);
+			printf("ejtheuth %s", link);
+
+			char header[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body>";
+			char msg[2056] = "";
+			int offset = 0;
+			sprintf(msg, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body>");
+			//sprintf(msg + strlen(msg), "HELLO<br>WORLD!");
+			//WIN32_FIND_DATAA DATA;
+			HANDLE h = FindFirstFileA(link, &DATA2);
+			do {
+				if (DATA2.dwFileAttributes &
+					FILE_ATTRIBUTE_DIRECTORY) {
+					// Đây là một thư mục
+					// In ra tên thư mục
+					char link[] = "";
+					//sprintf(link, "C:\\%s\\", DATA.cFileName);
+					sprintf(msg + strlen(msg), "<br><i><a href = \"%s\">%s</a></i><br>", DATA2.cFileName, DATA2.cFileName);
+					//system("PAUSE");
+				}
+				else {
+					char tmp[] = "";
+					//int offset =  0;
+					unsigned long size = (DATA2.nFileSizeHigh*(MAXDWORD + 1)) + DATA2.nFileSizeLow;
+					sprintf(msg + strlen(msg), "<br><i><a href = \"%s\">%s : %ul</a></i><br>", DATA2.cFileName, DATA2.cFileName, size);
+				}
+			} while (FindNextFileA(h, &DATA2));
+			sprintf(msg + strlen(msg), "</body></html>");
+			printf(msg);
+			send(client, msg, strlen(msg), 0);
+
+		}
 		else
 		{
-			// Tra ve du lieu text html
-			char msg[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body>Yeu cau khong duoc ho tro</body></html>";
-			send(client, msg, strlen(msg), 0);
+			//msg[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body>Yeu cau khong duoc ho tro</body></html>";
+			//send(client, msg, strlen(msg), 0);
 		}
 
 		closesocket(client);
